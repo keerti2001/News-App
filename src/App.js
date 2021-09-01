@@ -6,18 +6,17 @@ const App = ()=> {
   const [term, setTerm] = useState('everything')
   const [isloading, setIsLoading] = useState(true)
   var url='https://api.nytimes.com/svc/search/v2/articlesearch.json?q='+term+'&api-key='+process.env.REACT_APP_ARTICLES_API_KEY;
-  
   useEffect(()=>{
     const fetchArticles =async ()=>{  
     try{
-          
-          const res= await fetch(url);
+
+          const res= await fetch(url)
           const articles= await res.json()
           console.log(articles);
-          console.log(articles.docs)
-          setArticles(articles.docs)
+          console.log(articles.response.docs)
+          setArticles(articles.response.docs)
           setIsLoading(false)
-          
+
        } catch(error){
            console.log(error);
        }
@@ -32,7 +31,7 @@ const App = ()=> {
      <div className="overlay px-5">
        <h1 className="text-4xl font-bold text-black text-center mb-4
        capitalize lg:text-6xl"> Viewing articles about {term}
-       
+
        </h1>
        <SearchForm searchText={(text)=> setTerm(text)}/>
        </div>
@@ -40,18 +39,23 @@ const App = ()=> {
    {isloading? <h1 className="text-center mt-20 font-bold text-6xl">Loading....</h1> :
     <section className=" grid grid-cols-1 px-5 pt-10 pb-20">
     {articles.map((article) => {
-      const {article:{author,title,summary,uuid,url,social:{updated} }}= article
+      const {abstract, headline:{main}, byline:{original},
+    lead_paragraph, news_desk, section_name,
+    web_url, _id, word_count,} = article
 
     return(
-      <article key={uuid} className="bg-white py-10 px-5 my-4 rounded-lg lg:w-9/12 lg:mx-auto">
-        <h2 className="font-bold text-2xl mb-2 lg:text-4xl">{title}</h2>
-        <p>{summary}</p>
-        
+      <article key={_id} className="bg-white py-10 px-5 my-4 rounded-lg lg:w-9/12 lg:mx-auto">
+        <h2 className="font-bold text-2xl mb-2 lg:text-4xl">{main}</h2>
+        <p>{abstract}</p>
+        <p>{lead_paragraph}</p>
+
         <ul className="my-4">
-          <li>By: {author}</li>
-          <li><span className="font-bold">updated : </span>{updated}</li>
+          <li>{original}</li>
+          <li><span className="font-bold">News Desk: </span>{news_desk}</li>
+          <li><span className="font-bold">Section Name : </span>{section_name}</li>
+          <li><span className="font-bold">Word Count : </span>{word_count}</li>
         </ul>
-        <a href={url}className="underline">Web Resource</a>
+        <a href={web_url} target="_blank" className="underline">Web Resource</a>
         </article>
     )
 
