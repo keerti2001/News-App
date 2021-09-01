@@ -5,13 +5,13 @@ const App = ()=> {
   const [articles ,setArticles]=useState([])
   const [term, setTerm] = useState('everything')
   const [isloading, setIsLoading] = useState(true)
-  //var url='https://api.nytimes.com/svc/search/v2/articlesearch.json?q='+term+'&api-key='+process.env.REACT_APP_ARTICLES_API_KEY;
+  var url='https://api.nytimes.com/svc/search/v2/articlesearch.json?q='+term+'&api-key='+process.env.REACT_APP_ARTICLES_API_KEY;
   
   useEffect(()=>{
     const fetchArticles =async ()=>{  
     try{
           
-          const res= await fetch("https://webhose.io/nseFilter?token=acf07eda-af87-4cd7-a8a6-c4ecbeb3bce1&q="+term);
+          const res= await fetch(url);
           const articles= await res.json()
           console.log(articles);
           console.log(articles.docs)
